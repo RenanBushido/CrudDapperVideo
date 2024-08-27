@@ -1,4 +1,5 @@
-﻿using CrudDapperVideo.Services;
+﻿using CrudDapperVideo.Dto;
+using CrudDapperVideo.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CrudDapperVideo.Controllers
@@ -18,10 +19,53 @@ namespace CrudDapperVideo.Controllers
         {
             var usuarios = await _usuarioInterfaces.BuscarUsuarios();
 
-            if (usuarios == null) 
+            if (usuarios.Status == false) 
             { 
                 return NotFound(usuarios);
             }
+
+            return Ok(usuarios);
+        }
+
+        [HttpGet("{usuarioId}")]
+        public async Task<IActionResult> BuscarUsuarioPorId(int usuarioId)
+        {
+            var usuario = await _usuarioInterfaces.BuscarUsuarioPorId(usuarioId);
+
+            if(usuario.Status == false)
+            {
+                return BadRequest(usuario);
+            }
+
+            return Ok(usuario);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CriarUsuario(UsuarioCriarDto usuarioCriarDto)
+        {
+            var usuarios = await _usuarioInterfaces.CriarUsuario(usuarioCriarDto);
+
+            if (usuarios.Status == false) return NotFound(usuarios);
+
+            return Ok(usuarios);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> EditarUsuario(UsuarioEditarDto usuarioEditarDto)
+        {
+            var usuarios = await _usuarioInterfaces.EditarUsuario(usuarioEditarDto);
+
+            if (usuarios.Status == false) return NotFound(usuarios);
+
+            return Ok(usuarios);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> RemoverUsuario(int usuarioId)
+        {
+            var usuarios = await _usuarioInterfaces.RemoverUsuario(usuarioId);
+
+            if (usuarios.Status == false) return NotFound(usuarios);
 
             return Ok(usuarios);
         }
